@@ -141,6 +141,17 @@ void Order::MakeImplicit(StationID destination)
 }
 
 /**
+ * Makes this order an implicit order.
+ * @param destination the station to go to.
+ */
+void Order::MakeEngineSwap(StationID destination, OrderSwapEngineFlag subtype)
+{
+	this->type = OT_SWAP_ENGINES;
+	SetEngineSwapType(subtype);
+	this->dest = destination;
+}
+
+/**
  * Make this depot/station order also a refit order.
  * @param cargo   the cargo type to change to.
  * @pre IsType(OT_GOTO_DEPOT) || IsType(OT_GOTO_STATION).

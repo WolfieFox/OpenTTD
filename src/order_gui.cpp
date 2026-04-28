@@ -146,6 +146,14 @@ static const StringID _order_goto_dropdown[] = {
 	STR_ORDER_SHARE,
 };
 
+static const StringID _order_goto_dropdown_trains[] = {
+	STR_ORDER_GO_TO,
+	STR_ORDER_GO_TO_NEAREST_DEPOT,
+	STR_ORDER_CONDITIONAL,
+	STR_ORDER_LOCO_SWAP,
+	STR_ORDER_SHARE,
+};
+
 static const StringID _order_goto_dropdown_aircraft[] = {
 	STR_ORDER_GO_TO,
 	STR_ORDER_GO_TO_NEAREST_HANGAR,
@@ -346,6 +354,25 @@ void DrawOrderString(const Vehicle *v, const Order *order, VehicleOrderID order_
 			}
 			break;
 
+		case OT_SWAP_ENGINES: {
+			OrderLoadType load = order->GetLoadType();
+			OrderUnloadType unload = order->GetUnloadType();
+			bool valid_station = CanVehicleUseStation(v, Station::Get(order->GetDestination().ToStationID()));
+
+			line = GetString(valid_station ? STR_ORDER_ENGINE_SWAP_STATION : STR_ORDER_ENGINE_SWAP_STATION_CAN_T_USE_STATION,
+				order->GetEngineSwapType() == OrderSwapEngineFlag::DropLocomotiveFront ? STR_ORDER_ENGINE_DETACH_FRONT : STR_ORDER_ENGINE_ATTACH_REAR,
+				order->GetDestination());
+
+			if (timetable) {
+				/* Show only wait time in the timetable window. */
+				if (order->GetWaitTime() > 0) {
+					auto [str, value] = GetTimetableParameters(order->GetWaitTime());
+					line += GetString(order->IsWaitTimetabled() ? STR_TIMETABLE_STAY_FOR : STR_TIMETABLE_STAY_FOR_ESTIMATED, str, value);
+				}
+			}
+			break;
+		}
+
 		default: NOT_REACHED();
 	}
 
@@ -503,6 +530,7 @@ private:
 		OPOS_NONE,
 		OPOS_GOTO,
 		OPOS_CONDITIONAL,
+		OPOS_SWAP_LOCO,
 		OPOS_SHARE,
 		OPOS_END,
 	};
@@ -1251,15 +1279,28 @@ public:
 						this->OrderClick_Goto(OPOS_GOTO);
 					}
 				} else {
-					int sel;
-					switch (this->goto_type) {
-						case OPOS_NONE:        sel = -1; break;
-						case OPOS_GOTO:        sel =  0; break;
-						case OPOS_CONDITIONAL: sel =  2; break;
-						case OPOS_SHARE:       sel =  3; break;
-						default: NOT_REACHED();
+					if (this->vehicle->type == VEH_TRAIN) {
+						int sel;
+						switch (this->goto_type) {
+							case OPOS_NONE:        sel = -1; break;
+							case OPOS_GOTO:        sel = 0; break;
+							case OPOS_CONDITIONAL: sel = 2; break;
+							case OPOS_SWAP_LOCO:   sel = 3; break;
+							case OPOS_SHARE:       sel = 4; break;
+							default: NOT_REACHED();
+						}
+						ShowDropDownMenu(this, _order_goto_dropdown_trains, sel, WID_O_GOTO, 0, 0);
+					} else {
+						int sel;
+						switch (this->goto_type) {
+							case OPOS_NONE:        sel = -1; break;
+							case OPOS_GOTO:        sel = 0; break;
+							case OPOS_CONDITIONAL: sel = 2; break;
+							case OPOS_SHARE:       sel = 3; break;
+							default: NOT_REACHED();
+						}
+						ShowDropDownMenu(this, this->vehicle->type == VEH_AIRCRAFT ? _order_goto_dropdown_aircraft : _order_goto_dropdown, sel, WID_O_GOTO, 0, 0);
 					}
-					ShowDropDownMenu(this, this->vehicle->type == VEH_AIRCRAFT ? _order_goto_dropdown_aircraft : _order_goto_dropdown, sel, WID_O_GOTO, 0, 0);
 				}
 				break;
 

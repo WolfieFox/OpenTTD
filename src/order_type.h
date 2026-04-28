@@ -58,6 +58,7 @@ enum OrderType : uint8_t {
 	OT_GOTO_WAYPOINT = 6,
 	OT_CONDITIONAL   = 7,
 	OT_IMPLICIT      = 8,
+	OT_SWAP_ENGINES = 9,
 	OT_END
 };
 
@@ -98,6 +99,15 @@ enum class OrderStopLocation : uint8_t {
 	NearEnd = 0, ///< Stop at the near end of the platform
 	Middle = 1, ///< Stop at the middle of the platform
 	FarEnd = 2, ///< Stop at the far end of the platform
+	End, ///< End marker.
+};
+
+/**
+ * Trains: What to do with engines during a Swap Engines order
+ */
+enum class OrderSwapEngineFlag : uint8_t {
+	DropLocomotiveFront = 0, ///< Drop locomotives from the front end of the consist.
+	AttachLocomotiveRear = 1, ///< Attach to waiting consist at the destination station.
 	End, ///< End marker.
 };
 

@@ -82,19 +82,20 @@ public:
 	void MakeDummy();
 	void MakeConditional(VehicleOrderID order);
 	void MakeImplicit(StationID destination);
+	void MakeEngineSwap(StationID destination, OrderSwapEngineFlag subtype);
 
 	/**
 	 * Is this a 'goto' order with a real destination?
-	 * @return True if the type is either #OT_GOTO_WAYPOINT, #OT_GOTO_DEPOT or #OT_GOTO_STATION.
+	 * @return True if the type is either #OT_GOTO_WAYPOINT, #OT_GOTO_DEPOT, #OT_GOTO_STATION or OT_SWAP_ENGINES.
 	 */
 	inline bool IsGotoOrder() const
 	{
-		return IsType(OT_GOTO_WAYPOINT) || IsType(OT_GOTO_DEPOT) || IsType(OT_GOTO_STATION);
+		return IsType(OT_GOTO_WAYPOINT) || IsType(OT_GOTO_DEPOT) || IsType(OT_GOTO_STATION) || IsType(OT_SWAP_ENGINES);
 	}
 
 	/**
 	 * Gets the destination of this order.
-	 * @pre IsType(OT_GOTO_WAYPOINT) || IsType(OT_GOTO_DEPOT) || IsType(OT_GOTO_STATION).
+	 * @pre IsType(OT_GOTO_WAYPOINT) || IsType(OT_GOTO_DEPOT) || IsType(OT_GOTO_STATION) || IsType(OT_SWAP_ENGINES).
 	 * @return the destination of the order.
 	 */
 	inline DestinationID GetDestination() const { return this->dest; }
@@ -102,7 +103,7 @@ public:
 	/**
 	 * Sets the destination of this order.
 	 * @param destination the new destination of the order.
-	 * @pre IsType(OT_GOTO_WAYPOINT) || IsType(OT_GOTO_DEPOT) || IsType(OT_GOTO_STATION).
+	 * @pre IsType(OT_GOTO_WAYPOINT) || IsType(OT_GOTO_DEPOT) || IsType(OT_GOTO_STATION) || IsType(OT_SWAP_ENGINES).
 	 */
 	inline void SetDestination(DestinationID destination) { this->dest = destination; }
 
@@ -164,6 +165,12 @@ public:
 	inline OrderStopLocation GetStopLocation() const { return static_cast<OrderStopLocation>(GB(this->type, 4, 2)); }
 
 	/**
+	 * What type of engine swap are we going to do?
+	 * @return Type of engine swap order.
+	 */
+	inline OrderSwapEngineFlag GetEngineSwapType() const { return static_cast<OrderSwapEngineFlag>(GB(this->flags, 0, 1)); }
+
+	/**
 	 * What caused us going to the depot?
 	 * @return The reason to go to the depot.
 	 */
@@ -222,6 +229,12 @@ public:
 	 * @param stop_location The location to stop at.
 	 */
 	inline void SetStopLocation(OrderStopLocation stop_location) { SB(this->type, 4, 2, to_underlying(stop_location)); }
+
+	/**
+	 * Set where we must stop at the platform.
+	 * @param stop_location The location to stop at.
+	 */
+	inline void SetEngineSwapType(OrderSwapEngineFlag swap_engine_flag) { SB(this->flags, 0, 1, to_underlying(swap_engine_flag)); }
 
 	/**
 	 * Set the cause to go to the depot.

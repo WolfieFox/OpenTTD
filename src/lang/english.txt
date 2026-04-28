@@ -4777,6 +4777,7 @@ STR_ORDERS_GO_TO_BUTTON                                         :{BLACK}Go To
 STR_ORDER_GO_TO_NEAREST_DEPOT                                   :Go to nearest depot
 STR_ORDER_GO_TO_NEAREST_HANGAR                                  :Go to nearest hangar
 STR_ORDER_CONDITIONAL                                           :Conditional order jump
+STR_ORDER_LOCO_SWAP                                             :Exchange Locomotives
 STR_ORDER_SHARE                                                 :Share orders
 STR_ORDERS_GO_TO_TOOLTIP                                        :{BLACK}Insert a new order before the highlighted order, or add to end of list. Ctrl+Click on a station for 'full load any cargo', on a waypoint to invert the 'non-stop by default' setting, or on a depot for 'unbunch'. Click on another vehicle to copy its orders or Ctrl+Click to share orders. A depot order disables automatic servicing of the vehicle
 
@@ -4807,6 +4808,11 @@ STR_ORDER_WAIT_TO_UNBUNCH                                       :{SPACE}(Wait to
 
 STR_ORDER_GO_TO_STATION                                         :{STRING} {STATION}
 STR_ORDER_GO_TO_STATION_CAN_T_USE_STATION                       :{PUSH_COLOUR}{RED}(Can't use station){POP_COLOUR} {STRING} {STATION}
+
+STR_ORDER_ENGINE_DETACH_FRONT                                   :Drop engines at
+STR_ORDER_ENGINE_ATTACH_REAR                                    :Attach to train at
+STR_ORDER_ENGINE_SWAP_STATION                                   :{STRING} {STATION}
+STR_ORDER_ENGINE_SWAP_STATION_CAN_T_USE_STATION                 :{PUSH_COLOUR}{RED}(Can't use station){POP_COLOUR} {STRING} {STATION}
 
 STR_ORDER_IMPLICIT                                              :{SPACE}(Implicit)
 
