@@ -2131,8 +2131,13 @@ CommandCost CmdReverseTrainDirection(DoCommandFlags flags, VehicleID veh_id, boo
 	if (reverse_single_veh) {
 		/* turn a single unit around */
 
-		if (v->IsMultiheaded() || EngInfo(v->engine_type)->callback_mask.Test(VehicleCallbackMask::ArticEngine)) {
+		if (v->IsMultiheaded()) {
 			return CommandCost(STR_ERROR_CAN_T_REVERSE_DIRECTION_RAIL_VEHICLE_MULTIPLE_UNITS);
+		}
+
+		if (EngInfo(v->engine_type)->callback_mask.Test(VehicleCallbackMask::ArticEngine)
+			&& !EngInfo(v->engine_type)->extra_flags.Test(ExtraEngineFlag::FlippableWhenArticulated)) {
+			//return CommandCost(STR_ERROR_CAN_T_REVERSE_DIRECTION_RAIL_VEHICLE_MULTIPLE_UNITS);
 		}
 
 		Train *front = v->First();
